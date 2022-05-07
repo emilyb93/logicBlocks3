@@ -1,5 +1,5 @@
-exports.sonarWindow = (inputData) => {
-  const splitData = inputData.split("\n");
+exports.sonarWindow = (sweepData) => {
+  const splitSweepData = sweepData.split("\n");
 
   let count = 0;
 
@@ -7,15 +7,22 @@ exports.sonarWindow = (inputData) => {
     return total + Number(a);
   }
 
-  for (let i = 0; i < splitData.length; i++) {
-    const firstWindowTotal = splitData.slice(i, i + 3).reduce(addWindows, 0);
-    const secondWindowTotal = splitData
-      .slice(i + 1, i + 4)
+  //set the first window total
+  let previousWindowTotal = splitSweepData.slice(0, 3).reduce(addWindows, 0);
+
+  for (let i = 1; i < splitSweepData.length; i++) {
+    //calculate the next window total
+    const currentWindowTotal = splitSweepData
+      .slice(i, i + 3)
       .reduce(addWindows, 0);
 
-    if (secondWindowTotal > firstWindowTotal) {
+    // compare it against the previous
+    if (currentWindowTotal > previousWindowTotal) {
       count++;
     }
+
+    // reassign the previous total as this one, so we dont have to do 2 reduces each time
+    previousWindowTotal = currentWindowTotal;
   }
 
   return count;
